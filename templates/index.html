@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Intelligent Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <h2>Intelligent Task Manager</h2>
+
+    <form action="/add" method="POST">
+        <fieldset>
+            <legend>Add Task</legend>
+            <label for="title">Title:</label>
+            <input type="text" name="title" required>
+
+            <label for="description">Description:</label>
+            <textarea name="description"></textarea>
+
+            <label for="deadline">Deadline (YYYY-MM-DD):</label>
+            <input type="date" name="deadline">
+
+            <button type="submit">Add Task</button>
+        </fieldset>
+    </form>
+
+    <hr>
+
+    <h3>Current Tasks</h3>
+    {% if tasks %}
+    {% for task in tasks %}
+    <div class="task">
+        <strong>{{ task.title }}</strong>
+        <br>{{ task.description }}<br>
+        <em>Due: {{ task.deadline }}</em>
+        <div class="actions">
+            <form action="/edit/{{ task.id }}" method="POST" style="display:inline-block">
+                <input type="text" name="title" placeholder="New title">
+                <input type="text" name="description" placeholder="New description">
+                <input type="date" name="deadline">
+                <button type="submit">Edit</button>
+            </form>
+            <a href="/delete/{{ task.id }}" style="margin-left:10px">Delete</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>No tasks yet.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Prioritize Tasks</h3>
+    <button onclick="prioritizeTasks()">Get Prioritized List</button>
+    <ul id="prioritized-list"></ul>
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
